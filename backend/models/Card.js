@@ -5,6 +5,7 @@ const cardSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+        trim: true,
     },
 
     description: {
@@ -35,6 +36,11 @@ const cardSchema = new mongoose.Schema(
       type: String,
       enum: ["low", "medium", "high"],
       default: "medium",
+    },
+    
+    order: {
+      type: Number,
+      default: 0,
     },
 
     createdBy: {
