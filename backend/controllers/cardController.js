@@ -147,3 +147,31 @@ export const deleteCard = asyncHandler(async (req, res) => {
   res.status(200).json({success: true, message: "Card deleted successfully"});
     
 });
+
+export const moveCard = asyncHandler(async (req, res) =>{
+
+  const { column, order } = req.body;
+
+  const card = await Card.findById(req.params.cardId);
+
+  if (!card){
+    return res.status(404).json({ success: false, message: "Card not found" });
+  }
+
+  const board = await Board.findById(card.board);
+
+  const isMember = board.members.some(
+    (member) => member.toString() === req.user._id.toString()
+  );
+
+  if(!isMember){
+    return res.status(403).json({ success: false, message: "Not allowed" });
+  }
+
+  card.column = column ?? card.column;
+  card.order = order ?? card.order;
+
+  await card.save();
+
+  res.status(200).json({success: true,message: "Card moved successfully",card});
+});
