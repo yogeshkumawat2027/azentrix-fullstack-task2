@@ -1,5 +1,6 @@
 import Board from "../models/Board.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
+import User from "../models/User.js";
 
 export const createBoard = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
@@ -31,13 +32,13 @@ export const getMyBoards = asyncHandler( async (req, res) =>{
 
 export const getSingleBoard = asyncHandler(async (req, res) => {
 
-  const board = await Board.findById(req.params.id);
+  const board = await Board.findById(req.params.id)
+                                 .populate("createdBy", "name email role")
+                                 .populate("members", "name email role");
+
 
   if (!board)  return res.status(404).json({success: false,message: "Board not found",});
-
-   await  board.populate("createdBy", "name email role")
-         .populate("members", "name email role");
-
+         
   if (!board.members.some((m) => m._id.toString() === req.user._id.toString())) {
     return res.status(403).json({
       success: false,

@@ -35,7 +35,7 @@ export const registerUser = asyncHandler(async(req , res)=>{
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.status(201).json({success  : true , message : "Registration successful" , user});
+    res.status(201).json({success  : true , message : "Registration successful" , user, token});
 
 })
 
@@ -79,7 +79,7 @@ export const loginUser = asyncHandler( async(req, res) =>{
     maxAge: 7 * 24 * 60 * 60 * 1000
   });
 
-  res.status(200).json({success: true,user});
+  res.status(200).json({success: true,user , token});
     
 
 });
