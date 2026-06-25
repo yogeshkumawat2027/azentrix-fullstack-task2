@@ -1,27 +1,49 @@
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
+import api from "../api/axios";
+
+import BoardForm from "../components/board/BoardForm";
+import BoardGrid from "../components/board/BoardGrid";
+import Navbar from "../components/common/Navbaar";
 
 function Dashboard() {
-  const { user, logout } = useAuth();
+  const [boards, setBoards] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchBoards = async () => {
+    try {
+      const res = await api.get("/boards");
+      setBoards(res.data.boards);
+    } catch (error) {
+      console.log(error.response?.data?.message || "Failed to fetch boards");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBoards();
+  }, []);
+
+  const handleBoardCreated = (board) => {
+    setBoards((prev) => [board, ...prev]);
+  };
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between rounded-xl bg-white p-5 shadow">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
-            <p className="text-sm text-slate-500">
-              Welcome, {user?.name}
-            </p>
-          </div>
+    <div className="min-h-screen bg-slate-100">
+      <Navbar />
 
-          <button
-            onClick={logout}
-            className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          >
-            Logout
-          </button>
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-800">My Boards</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Create and manage your task boards.
+          </p>
         </div>
-      </div>
+
+        <BoardForm onBoardCreated={handleBoardCreated} />
+
+        <BoardGrid boards={boards} loading={loading} />
+      </main>
     </div>
   );
 }
