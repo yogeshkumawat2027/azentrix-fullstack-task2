@@ -1,2 +1,68 @@
 6a3cb9cff72fb7bfb1f30ea3
 
+frontend/
+│
+├── public/
+│
+├── src/
+│   │
+│   ├── api/
+│   │     └── axios.js
+│   │
+│   ├── assets/
+│   │     ├── images/
+│   │     └── icons/
+│   │
+│   ├── components/
+│   │     ├── common/
+│   │     │      ├── Button.jsx
+│   │     │      ├── Input.jsx
+│   │     │      ├── Loader.jsx
+│   │     │      ├── Modal.jsx
+│   │     │      └── Navbar.jsx
+│   │     │
+│   │     ├── board/
+│   │     │      ├── BoardHeader.jsx
+│   │     │      ├── Column.jsx
+│   │     │      ├── CardItem.jsx
+│   │     │      ├── CardModal.jsx
+│   │     │      └── MemberList.jsx
+│   │     │
+│   │     └── auth/
+│   │            └── AuthForm.jsx
+│   │
+│   ├── context/
+│   │      └── AuthContext.jsx
+│   │
+│   ├── hooks/
+│   │      ├── useAuth.js
+│   │      └── useSocket.js
+│   │
+│   ├── layouts/
+│   │      ├── AuthLayout.jsx
+│   │      └── DashboardLayout.jsx
+│   │
+│   ├── pages/
+│   │      ├── Login.jsx
+│   │      ├── Register.jsx
+│   │      ├── Dashboard.jsx
+│   │      ├── Board.jsx
+│   │      └── NotFound.jsx
+│   │
+│   ├── routes/
+│   │      └── ProtectedRoute.jsx
+│   │
+│   ├── styles/
+│   │      └── globals.css
+│   │
+│   ├── utils/
+│   │      ├── socket.js
+│   │      ├── constants.js
+│   │      └── helpers.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── package.json
+└── vite.config.js
