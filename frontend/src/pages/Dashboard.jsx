@@ -3,7 +3,7 @@ import api from "../api/axios";
 
 import BoardForm from "../components/board/BoardForm";
 import BoardGrid from "../components/board/BoardGrid";
-import Navbar from "../components/common/Navbaar";
+import Navbar from "../components/common/Navbar";
 
 function Dashboard() {
   const [boards, setBoards] = useState([]);

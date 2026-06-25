@@ -1,4 +1,17 @@
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+
 function CardItem({ card }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: card._id,
+    });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   const priorityClasses = {
     low: "bg-green-100 text-green-700",
     medium: "bg-yellow-100 text-yellow-700",
@@ -6,7 +19,13 @@ function CardItem({ card }) {
   };
 
   return (
-    <div className="rounded-xl bg-white p-4 shadow-sm">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="cursor-grab rounded-xl bg-white p-4 shadow-sm transition active:cursor-grabbing"
+    >
       <div className="mb-2 flex items-start justify-between gap-3">
         <h3 className="font-semibold text-slate-800">{card.title}</h3>
 

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { DndContext } from "@dnd-kit/core";
 
 import api from "../api/axios";
-
-import BoardColumn from "../components/card/BoardColumn";
+import Navbar from "../components/common/Navbar";
 import BoardHeader from "../components/card/BoardHeader";
+import BoardColumn from "../components/card/BoardColumn";
 import CardModal from "../components/card/CardModal";
-import Navbar from "../components/common/Navbaar";
+import BoardMembers from "../components/board/BoardMembers";
 
 const columns = ["To Do", "In Progress", "Done"];
 
@@ -21,7 +22,7 @@ function BoardDetails() {
   const fetchBoardData = async () => {
     try {
       const boardRes = await api.get(`/boards/${id}`);
-      const cardsRes = await api.get(`/boards/${id}/cards`);
+      const cardsRes = await api.get(`/cards/${id}/cards`);
 
       setBoard(boardRes.data.board);
       setCards(cardsRes.data.cards);
@@ -38,6 +39,41 @@ function BoardDetails() {
 
   const handleCardCreated = (card) => {
     setCards((prev) => [card, ...prev]);
+  };
+
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const cardId = active.id;
+    const newColumn = over.id;
+
+    const currentCard = cards.find((card) => card._id === cardId);
+
+    if (!currentCard || currentCard.column === newColumn) return;
+
+    setCards((prev) =>
+      prev.map((card) =>
+        card._id === cardId ? { ...card, column: newColumn } : card
+      )
+    );
+
+    try {
+      const res = await api.patch(`/cards/${cardId}/move`, {
+        column: newColumn,
+      });
+
+      setCards((prev) =>
+        prev.map((card) => (card._id === cardId ? res.data.card : card))
+      );
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to move card");
+
+      setCards((prev) =>
+        prev.map((card) => (card._id === cardId ? currentCard : card))
+      );
+    }
   };
 
   if (loading) {
@@ -59,6 +95,8 @@ function BoardDetails() {
           onOpenCreateCard={() => setIsCreateOpen(true)}
         />
 
+        <BoardMembers boardId={id} />
+
         <CardModal
           isOpen={isCreateOpen}
           onClose={() => setIsCreateOpen(false)}
@@ -66,15 +104,17 @@ function BoardDetails() {
           onCardCreated={handleCardCreated}
         />
 
-        <div className="grid gap-5 lg:grid-cols-3">
-          {columns.map((column) => (
-            <BoardColumn
-              key={column}
-              title={column}
-              cards={cards.filter((card) => card.column === column)}
-            />
-          ))}
-        </div>
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="grid gap-5 lg:grid-cols-3">
+            {columns.map((column) => (
+              <BoardColumn
+                key={column}
+                title={column}
+                cards={cards.filter((card) => card.column === column)}
+              />
+            ))}
+          </div>
+        </DndContext>
       </main>
     </div>
   );
