@@ -22,6 +22,11 @@ socket.on("board-updated", (data) => {
   console.log(data);
 });
 
+socket.on("board-deleted", (data) => {
+  console.log("Board deleted:");
+  console.log(data);
+});
+
 socket.on("card-created", (data) => {
   console.log("Card Created:");
   console.log(data);

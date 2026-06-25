@@ -2,6 +2,8 @@ import Card from "../models/Card.js";
 import Board from "../models/Board.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
+import { getIO } from "../socket.js";
+
 export const createCard = asyncHandler(async (req, res) => {
   const {
     title,
@@ -39,6 +41,9 @@ export const createCard = asyncHandler(async (req, res) => {
     priority,
     createdBy: req.user._id,
   });
+
+  const io = getIO();
+  io.to(board._id.toString()).emit("card-created", card);
 
   res.status(201).json({
     success: true,
@@ -122,6 +127,9 @@ export const updateCard = asyncHandler(async (req, res) =>{
 
   await card.save();
 
+  const io = getIO();
+  io.to(card.board.toString()).emit("card-updated", card);
+
   res.status(200).json({
     success: true,
     message: "Card updated successfully",
@@ -142,7 +150,13 @@ export const deleteCard = asyncHandler(async (req, res) => {
       message: "Only card creator can delete this card",
     });
   }
+
+  const boardId = card.board.toString();
+
   await card.deleteOne();
+
+  const io = getIO();
+  io.to(boardId).emit("card-deleted", req.params.cardId);
 
   res.status(200).json({success: true, message: "Card deleted successfully"});
     
@@ -172,6 +186,8 @@ export const moveCard = asyncHandler(async (req, res) =>{
   card.order = order ?? card.order;
 
   await card.save();
+  const io = getIO();
+  io.to(card.board.toString()).emit("card-moved", card);
 
   res.status(200).json({success: true,message: "Card moved successfully",card});
 });
