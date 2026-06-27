@@ -13,7 +13,7 @@ function BoardCard({ board }) {
       </p>
 
       <div className="mt-5 flex items-center justify-between text-xs text-slate-400">
-        <span>{board.members?.length || 1} member(s)</span>
+        {/* <span>{board.members?.length || 1} member(s)</span> */}
         {/* <span>Open →</span> */}
       </div>
     </Link>
