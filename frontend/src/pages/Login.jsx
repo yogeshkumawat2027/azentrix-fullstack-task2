@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../components/common/AuthLayout";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,22 +39,20 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="text-2xl font-bold text-slate-800">Welcome Back</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Login to continue your work.
-        </p>
-
+    <AuthLayout
+      title="Log in to your Tasqro workspace."
+      description="Keep workspaces, team members, task priorities, and deadlines aligned in one focused command center."
+    >
+      <div className="w-full">
         {error && (
-          <div className="mt-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">
+          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-bold text-zinc-900">
               Email
             </label>
             <input
@@ -61,13 +60,13 @@ function Login() {
               type="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+              className="h-11 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-sm text-black outline-none transition focus:border-black focus:bg-white focus:ring-4 focus:ring-black/10"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-bold text-zinc-900">
               Password
             </label>
             <input
@@ -75,24 +74,24 @@ function Login() {
               type="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
-              placeholder="******"
+              className="h-11 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-sm text-black outline-none transition focus:border-black focus:bg-white focus:ring-4 focus:ring-black/10"
+              placeholder="Enter your password"
             />
           </div>
 
-          <button className="w-full rounded-lg bg-blue-600 py-2 font-medium text-white hover:bg-blue-700">
-            Login
+          <button className="h-11 w-full rounded-xl bg-black px-4 text-sm font-bold text-white transition hover:bg-zinc-800 disabled:opacity-60">
+            Log in
           </button>
         </form>
 
-        <p className="mt-5 text-center text-sm text-slate-600">
+        <p className="mt-5 text-center text-sm text-zinc-600">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="font-medium text-blue-600">
+          <Link to="/register" className="font-bold text-black underline-offset-4 hover:underline">
             Register
           </Link>
         </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 
