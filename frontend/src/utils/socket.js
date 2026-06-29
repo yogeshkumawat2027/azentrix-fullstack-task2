@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://azentrix-fullstack-task2-w51b.onrender.com", {
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
+const socket = io( serverUrl, {
   withCredentials: true,
   autoConnect: false,
 });
