@@ -31,8 +31,8 @@ function Login() {
     }
 
     try {
-      await login(form);
-      navigate("/dashboard");
+      const data = await login(form);
+      navigate(data.user?.role === "admin" ? "/admin" : "/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

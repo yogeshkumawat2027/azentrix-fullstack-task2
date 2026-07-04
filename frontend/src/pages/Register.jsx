@@ -32,8 +32,8 @@ function Register() {
     }
 
     try {
-      await register(form);
-      navigate("/dashboard");
+      const data = await register(form);
+      navigate(data.user?.role === "admin" ? "/admin" : "/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }
