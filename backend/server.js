@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import boardRoutes from "./routes/boardRoutes.js";
 import cardRoutes from "./routes/cardRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import { initSocket } from "./socket.js";
 
 const PORT = process.env.PORT || 5000;
@@ -30,6 +31,7 @@ dotenv.config();
 app.use("/api/auth", authRoutes);
 app.use("/api/boards", boardRoutes);
 app.use("/api/cards", cardRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 app.get("/", (req, res) => {

@@ -12,6 +12,40 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateUserRole = asyncHandler(async (req, res) => {
+  const { role } = req.body;
+
+  if (!["admin", "member"].includes(role)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid role",
+    });
+  }
+
+  const user = await User.findById(req.params.userId);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  user.role = role;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "User role updated successfully",
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+});
+
 export const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.userId);
 
