@@ -99,3 +99,52 @@ export const getMe = asyncHandler(async (req, res) => {
     user: req.user,
   });
 });
+
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({
+      success: false,
+      message: "Name and email are required",
+    });
+  }
+
+  const existingUser = await User.findOne({
+    email,
+    _id: { $ne: req.user._id },
+  });
+
+  if (existingUser) {
+    return res.status(400).json({
+      success: false,
+      message: "Email already in use",
+    });
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  user.name = name;
+  user.email = email;
+
+  if (password) {
+    user.password = await bcrypt.hash(password, 10);
+  }
+
+  await user.save();
+
+  const updatedUser = await User.findById(user._id).select("-password");
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    user: updatedUser,
+  });
+});

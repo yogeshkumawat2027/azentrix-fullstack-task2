@@ -18,6 +18,6 @@ router.patch("/users/:userId/role",auth , isAdmin , updateUserRole);
 router.delete("/users/:userId",auth , isAdmin , deleteUser);
 
 router.get("/boards",auth, isAdmin , getAllBoards);
-router.delete("/boards/:boardId", deleteAnyBoard);
+router.delete("/boards/:boardId", auth, isAdmin ,deleteAnyBoard);
 
 export default router;
