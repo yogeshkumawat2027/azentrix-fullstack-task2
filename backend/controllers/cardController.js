@@ -42,13 +42,17 @@ export const createCard = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
   });
 
+  const populatedCard = await Card.findById(card._id)
+    .populate("assignee", "name email")
+    .populate("createdBy", "name email");
+
   const io = getIO();
-  io.to(board._id.toString()).emit("card-created", card);
+  io.to(board._id.toString()).emit("card-created", populatedCard);
 
   res.status(201).json({
     success: true,
     message: "Card created successfully",
-    card,
+    card: populatedCard,
   });
 });
 
@@ -127,13 +131,17 @@ export const updateCard = asyncHandler(async (req, res) =>{
 
   await card.save();
 
+  const populatedCard = await Card.findById(card._id)
+    .populate("assignee", "name email")
+    .populate("createdBy", "name email");
+
   const io = getIO();
-  io.to(card.board.toString()).emit("card-updated", card);
+  io.to(card.board.toString()).emit("card-updated", populatedCard);
 
   res.status(200).json({
     success: true,
     message: "Card updated successfully",
-    card,
+    card: populatedCard,
   });
 });
 
@@ -186,8 +194,12 @@ export const moveCard = asyncHandler(async (req, res) =>{
   card.order = order ?? card.order;
 
   await card.save();
-  const io = getIO();
-  io.to(card.board.toString()).emit("card-moved", card);
+  const populatedCard = await Card.findById(card._id)
+    .populate("assignee", "name email")
+    .populate("createdBy", "name email");
 
-  res.status(200).json({success: true,message: "Card moved successfully",card});
+  const io = getIO();
+  io.to(card.board.toString()).emit("card-moved", populatedCard);
+
+  res.status(200).json({success: true,message: "Card moved successfully",card: populatedCard});
 });
