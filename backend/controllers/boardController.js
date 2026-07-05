@@ -1,7 +1,6 @@
 import Board from "../models/Board.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
-import User from "../models/User.js";
-import { getIO } from "../socket.js";
+import User from "../models/User.js"; 
 
 export const createBoard = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
@@ -94,8 +93,7 @@ export const deleteBoard = asyncHandler(async (req, res) => {
 
   const deleted = await board.deleteOne();
 
-  const io = getIO();
-  io.to(boardId).emit("board-deleted", boardId);
+
 
   res.status(200).json({
     success: true,
@@ -125,16 +123,6 @@ export const addBoardMember = asyncHandler(async (req, res) => {
   board.members.push(user._id);
   await board.save();
 
-  const io = getIO();
-  io.to(board._id.toString()).emit("member-added", {
-    boardId: board._id,
-    member: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
-  });
 
   res.status(200).json({ success: true, message: "Member added successfully", board });
 });
@@ -160,11 +148,6 @@ export const removeBoardMember = asyncHandler(async (req, res) => {
 
   await board.save();
 
-  const io = getIO();
-  io.to(board._id.toString()).emit("member-removed", {
-    boardId: board._id,
-    userId: removedUserId,
-  });
 
 
   res.status(200).json({ success: true, message: "member removed successfully", board });
