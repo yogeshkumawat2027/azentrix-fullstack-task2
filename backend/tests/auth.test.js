@@ -89,3 +89,5 @@ describe("Auth APIs", () => {
         expect(res.body.success).toBe(false);
     });
 });
+
+console.log("check test");
