@@ -19,26 +19,26 @@ describe("Auth APIs", () => {
         expect(res.body.user.email).toBe("test@example.com");
     });
 
-    // it("should not register user with duplicate email", async () => {
-    //     await request(app)
-    //         .post("/api/auth/register")
-    //         .send({
-    //             name: "Test User",
-    //             email: "test@example.com",
-    //             password: "123456",
-    //         });
+    it("should not register user with duplicate email", async () => {
+        await request(app)
+            .post("/api/auth/register")
+            .send({
+                name: "Test User",
+                email: "test@example.com",
+                password: "123456",
+            });
 
-    //     const res = await request(app)
-    //         .post("/api/auth/register")
-    //         .send({
-    //             name: "Another User",
-    //             email: "test@example.com",
-    //             password: "123456",
-    //         });
+        const res = await request(app)
+            .post("/api/auth/register")
+            .send({
+                name: "Another User",
+                email: "test@example.com",
+                password: "123456",
+            });
 
-    //     expect(res.statusCode).toBe(400);
-    //     expect(res.body.success).toBe(false);
-    // });
+        expect(res.statusCode).toBe(400);
+        expect(res.body.success).toBe(false);
+    });
 
     it("should login registered user", async () => {
         await request(app)
